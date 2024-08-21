@@ -3,10 +3,9 @@ import Square from './Square'
 import Status from './Status';
 
 export default function Game() {
-    const [xIsNext, setXIsNext] = useState(true);
     const [history, setHistory] = useState([Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0);
-    
+    const xIsNext = currentMove%2 === 0;
     const squares = history[currentMove];
     const moves = history.map((moveSquares, moveNumber) => {
         const description = `move ${moveNumber}`;
@@ -26,13 +25,11 @@ export default function Game() {
     function handlePlay(newSquares) {
         const slicedHistory = history.slice(0, currentMove+1);
         setHistory([...slicedHistory, newSquares]);
-        setXIsNext(!xIsNext);
         setCurrentMove(currentMove+1);
     }
 
     function jumpTo(moveNumber) {
         setCurrentMove(moveNumber);
-        setXIsNext(moveNumber%2===0);
     }
   }
 
