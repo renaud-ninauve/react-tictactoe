@@ -5,21 +5,34 @@ import Status from './Status';
 export default function Game() {
     const [xIsNext, setXIsNext] = useState(true);
     const [history, setHistory] = useState([Array(9).fill(null)]);
-    const squares = history[history.length-1];
+    const [currentMove, setCurrentMove] = useState(0);
+    
+    const squares = history[currentMove];
+    const moves = history.map((moveSquares, moveNumber) => {
+        const description = `move ${moveNumber}`;
+        return (<li key={moveNumber}><button onClick={() => jumpTo(moveNumber)}>{description}</button></li>);
+    });
     return (
       <div className="game">
         <div className="game-board">
           <Board squares={squares} xIsNext={xIsNext} onPlay={handlePlay}/>
         </div>
         <div className="game-info">
-          <ol>{/*TODO*/}</ol>
+            <ol>{moves}</ol>
         </div>
       </div>
     );
 
     function handlePlay(newSquares) {
-        setHistory([...history, newSquares]);
+        const slicedHistory = history.slice(0, currentMove+1);
+        setHistory([...slicedHistory, newSquares]);
         setXIsNext(!xIsNext);
+        setCurrentMove(currentMove+1);
+    }
+
+    function jumpTo(moveNumber) {
+        setCurrentMove(moveNumber);
+        setXIsNext(moveNumber%2===0);
     }
   }
 
