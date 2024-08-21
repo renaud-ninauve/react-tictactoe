@@ -3,27 +3,34 @@ import Square from './Square'
 import Status from './Status';
 
 export default function Game() {
+    const [xIsNext, setXIsNext] = useState(true);
+    const [history, setHistory] = useState([Array(9).fill(null)]);
+    const squares = history[history.length-1];
     return (
       <div className="game">
         <div className="game-board">
-          <Board />
+          <Board squares={squares} xIsNext={xIsNext} onPlay={handlePlay}/>
         </div>
         <div className="game-info">
           <ol>{/*TODO*/}</ol>
         </div>
       </div>
     );
+
+    function handlePlay(newSquares) {
+        setHistory([...history, newSquares]);
+        setXIsNext(!xIsNext);
+    }
   }
 
-function Board() {
-    const [isNext, setIsNext] = useState(true);
-    const [squares, setSquares] = useState(Array(9).fill(null));
+function Board({squares, xIsNext, onPlay}) {
+    
     const winner = calculateWinner(squares);
     let status;
     if (winner) {
         status = `Winner: ${winner}`
     } else {
-        status = isNext ? 'X' : 'O';
+        status = xIsNext ? 'X' : 'O';
     }
     return <>
         <Status value={status}/>
@@ -49,9 +56,8 @@ function Board() {
             return;
         }
         const newSquares = squares.slice();
-        newSquares[index] = isNext ? 'X': 'O';
-        setSquares(newSquares);
-        setIsNext(!isNext);
+        newSquares[index] = xIsNext ? 'X': 'O';
+        onPlay(newSquares);
     }
 
     function calculateWinner(squares) {
