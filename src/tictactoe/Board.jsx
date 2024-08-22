@@ -36,7 +36,7 @@ export default function Game() {
     }
   }
 
-function Board({squares, xIsNext, onPlay}) {
+export function Board({squares, xIsNext, onPlay}) {
     
     const winner = calculateWinner(squares);
     let status;
