@@ -8,7 +8,10 @@ export default function Game() {
     const xIsNext = currentMove%2 === 0;
     const squares = history[currentMove];
     const moves = history.map((moveSquares, moveNumber) => {
-        const description = `move ${moveNumber}`;
+        if (moveNumber === currentMove) {
+          return (<li key={moveNumber}>You are at move {moveNumber}</li>);
+        }
+        const description = moveNumber === 0 ? 'Go to game start':`move ${moveNumber}`;
         return (<li key={moveNumber}><button onClick={() => jumpTo(moveNumber)}>{description}</button></li>);
     });
     return (
@@ -42,23 +45,18 @@ function Board({squares, xIsNext, onPlay}) {
     } else {
         status = xIsNext ? 'X' : 'O';
     }
+    
+    const rows = Array(3).fill(null).map((r, row) => {
+      const cols = Array(3).fill(null).map((c, col) => (<Square key={row*3+col} value={squares[row*3+col]} onClick={() => onSquareClick(row*3+col)}/>));
+      return (
+        <div key={row} className="board-row">
+          {cols}
+        </div>);
+    });
+
     return <>
         <Status value={status}/>
-        <div className="board-row">
-        <Square value={squares[0]} onClick={() => onSquareClick(0)}/>
-        <Square value={squares[1]} onClick={() => onSquareClick(1)}/>
-        <Square value={squares[2]} onClick={() => onSquareClick(2)}/>
-        </div>
-        <div className="board-row">
-        <Square value={squares[3]} onClick={() => onSquareClick(3)}/>
-        <Square value={squares[4]} onClick={() => onSquareClick(4)}/>
-        <Square value={squares[5]} onClick={() => onSquareClick(5)}/>
-        </div>
-        <div className="board-row">
-        <Square value={squares[6]} onClick={() => onSquareClick(6)}/>
-        <Square value={squares[7]} onClick={() => onSquareClick(7)}/>
-        <Square value={squares[8]} onClick={() => onSquareClick(8)}/>
-        </div>
+        {rows}
         </>;
 
     function onSquareClick(index) {
