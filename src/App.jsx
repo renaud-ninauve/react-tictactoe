@@ -1,10 +1,10 @@
-import Board from './tictactoe/Board'
+import Game from './tictactoe/Game'
 import './App.css'
 
 function App() {
   return (
     <>
-      <Board></Board>
+      <Game></Game>
     </>
   )
 }
