@@ -7,5 +7,5 @@ export function GameInfo({moves, currentMove, jumpTo}) {
         return (<li key={moveNumber}><button onClick={() => jumpTo(moveNumber)}>{description}</button></li>);
     });
 
-    return (<ul>{infos}</ul>);
+    return (<ol>{infos}</ol>);
 }
