@@ -72,7 +72,7 @@ body {
 }
 
 .square.win {
-  border: 1px solid green;
+  border: 3px solid green;
 }
 
 .board-row:after {

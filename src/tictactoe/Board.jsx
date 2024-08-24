@@ -3,16 +3,21 @@ import Status from './Status';
 
 export default function Board({squares, xIsNext, onPlay}) {
     
-    const winner = calculateWinner(squares);
+    const result = calculateResult(squares);
     let status;
-    if (winner) {
-        status = `Winner: ${winner}`
+    if (result.winner) {
+        status = `Winner: ${result.winner}`
     } else {
         status = xIsNext ? 'X' : 'O';
     }
     
     const rows = Array(3).fill(null).map((r, row) => {
-      const cols = Array(3).fill(null).map((c, col) => (<Square key={row*3+col} value={squares[row*3+col]} onClick={() => onSquareClick(row*3+col)}/>));
+      const cols = Array(3).fill(null).map((c, col) => (
+        <Square key={row*3+col} 
+          value={squares[row*3+col]} 
+          onClick={() => onSquareClick(row*3+col)}
+          win={result.winningSquares.includes(row*3+col)}
+        />));
       return (
         <div key={row} className="board-row">
           {cols}
@@ -25,7 +30,7 @@ export default function Board({squares, xIsNext, onPlay}) {
         </>;
 
     function onSquareClick(index) {
-        if (squares[index] || calculateWinner(squares)) {
+        if (squares[index] || calculateResult(squares).winner) {
             return;
         }
         const newSquares = squares.slice();
@@ -33,7 +38,7 @@ export default function Board({squares, xIsNext, onPlay}) {
         onPlay(newSquares);
     }
 
-    function calculateWinner(squares) {
+    function calculateResult(squares) {
         const lines = [
           [0, 1, 2],
           [3, 4, 5],
@@ -47,9 +52,9 @@ export default function Board({squares, xIsNext, onPlay}) {
         for (let i = 0; i < lines.length; i++) {
           const [a, b, c] = lines[i];
           if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
+            return {winner: squares[a], winningSquares: lines[i]};
           }
         }
-        return null;
+        return {winner: null, winningSquares: []};
       }
   }

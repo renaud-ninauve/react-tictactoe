@@ -34,9 +34,13 @@ describe('<Board />', () => {
       'X', 'O', 'X',
       'X', null, null,
     ];
-    const onPlaySpy = cy.spy().as("onPlaySpy");
-    cy.mount(<Board squares={squares} xIsNext={true} onPlay={onPlaySpy}/>);
+    cy.mount(<Board squares={squares} xIsNext={true}/>);
     cy.get('.status').should('include.text', 'X').and('include.text', 'Winner');
+    
+    cy.get('.square.win').should('have.length', 3);
+    [0, 3, 6].forEach((expectedWin) => {
+      cy.get('.square').eq(expectedWin).should('have.class', 'square win');
+    });
   }),
 
   it('don\'t call onPlay when X has won', () => {
